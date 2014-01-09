@@ -399,7 +399,12 @@ NSInteger localizedCaseInsensitiveCompareSort(id string1, id string2, void *cont
         [randomArray sortedArrayWithOptions:NSSortConcurrent usingComparator:caseInsensitiveComparator];
     });
 
-    NSLog(@"Sorting %tu elements. selector: %.2f[ms] function: %.2f[ms] block: %.2f[ms].", randomArray.count, sort1/1E6, sort2/1E6, sort3/1E6);
+    double sort4 = PSPDFPerformAndTrackTime(^{
+        NSSortDescriptor* sortDescriptor=[NSSortDescriptor sortDescriptorWithKey:nil ascending:YES];
+        [randomArray sortedArrayUsingDescriptors:@[sortDescriptor]];
+    });
+    
+    NSLog(@"Sorting %tu elements. selector: %.2f[ms] function: %.2f[ms] block: %.2f[ms] sortDescriptor: %.2f[ms].", randomArray.count, sort1/1E6, sort2/1E6, sort3/1E6,sort4/1E6);
 
     NSArray *sortedArray = [randomArray sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     NSUInteger const searchNumberOfEntries = numberOfEntries/1000;
